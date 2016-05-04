@@ -1,4 +1,8 @@
+require_relative 'count_by'
+
 module Analyzable
+  create_count_by_methods "brand", "name"
+
   def average_price products
     total = products.inject 0 do |result, product|
       result += product.price.to_f
@@ -18,23 +22,5 @@ module Analyzable
       out += "-".ljust(4) + "#{name.capitalize}: #{count}\n"
     end
     out
-  end
-
-  def count_by_brand products
-    counts = Hash.new(0)
-    products.inject counts do |result, product|
-      result[product.brand] += 1
-      result
-    end
-    counts
-  end
-
-  def count_by_name products
-    counts = Hash.new(0)
-    products.inject counts do |result, product|
-      result[product.name] += 1
-      result
-    end
-    counts
   end
 end
