@@ -53,11 +53,38 @@ class Udacidata
     deleted_data
   end
 
+  def update options={}
+    # get valid keys for instance
+    valid_keys = self.instance_variables.map{|var| var[1..-1].to_sym}
+    # update valid attributes on instance
+    options.each do |key, value|
+      if valid_keys.include? key
+        self.instance_variable_set("@#{key}", value)
+      end
+    end
+
+    # get all the data
+    data = CSV.read(@@file)
+
+    #iterate over the data and update it
+    data.map!{|row| row[0] == self.id.to_s ? [self.id, self.brand, self.name, self.price] : row}
+
+    Udacidata.empty_file
+
+    CSV.open(@@file, "a") do |csv|
+      data.each do |row|
+        csv << row
+      end
+    end
+    # return the updated instance
+    self
+  end
+
   def self.write_file data
     CSV.open(@@file, "a") do |csv|
       csv << ["id", "brand", "product", "price"]
-      data.each do |item|
-        csv << [item.id, item.brand, item.name, item.price]
+      data.each do |row|
+        csv << [row.id, row.brand, row.name, row.price]
       end
     end
   end
