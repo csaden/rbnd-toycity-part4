@@ -4,11 +4,7 @@ module Analyzable
   create_count_by_methods "brand", "name"
 
   def average_price products
-    total = products.inject 0 do |result, product|
-      result += product.price.to_f
-      result
-    end
-    (total / products.size).round(2)
+    (products.inject(0){|sum, product| sum + product.price.to_f}/products.size).round(2)
   end
 
   def print_report products
